@@ -15,7 +15,7 @@ st.sidebar.header("Dataset Summary")
 # Load the breast cancer dataset
 breast_cancer_dataset = load_breast_cancer()
 df = pd.DataFrame(breast_cancer_dataset.data, columns=breast_cancer_dataset.feature_names)
-df["label"] = breast_cancer_dataset.target
+df["label"] = np.where(breast_cancer_dataset.target == 0, 'benign', 'malignant')
 
 # Show the dataset info
 # st.sidebar.subheader("Dataset info")
