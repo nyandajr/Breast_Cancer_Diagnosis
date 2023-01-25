@@ -52,18 +52,19 @@ testing_accuracy = accuracy_score(Y_test, model.predict(X_test))
 # Input data to predict
 input_data = st.multiselect("Select the features", df.columns[:-1], key="input")
 
-if len(input_data) < 30:
-    st.error("You must select at least 30 features to make a prediction, so far you have selected less.")
-   
-else:
-    input_data = [st.number_input(f"Enter {i}", min_value=df[i].min(), max_value=df[i].max(), value=df[i].mean(), step=0.01) for i in input_data]
-    if st.button("Predict"):
+input_data = [st.number_input(f"Enter {i}", min_value=df[i].min(), max_value=df[i].max(), value=df[i].mean(), step=0.01) for i in input_data]
+if st.button("Predict"):
+    if len(input_data) < 30:
+        st.error("You must select at least 30 features to make a prediction, so far you have selected less.")
+
+    else:
         input_data = np.array(input_data).reshape(1,-1)
         prediction = model.predict(input_data)
         if prediction[0] == 1:
             st.write("The patient is malignant.")
         else:
             st.write("The patient is benign.")
+
 
 st.header("Model Evaluation")
 st.write("Accuracy on training data:", round(training_accuracy*100), "%")
