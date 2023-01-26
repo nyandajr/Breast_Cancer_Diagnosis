@@ -15,7 +15,7 @@ st.sidebar.header("Dataset Summary")
 # Load the breast cancer dataset
 breast_cancer_dataset = load_breast_cancer()
 df = pd.DataFrame(breast_cancer_dataset.data, columns=breast_cancer_dataset.feature_names)
-df["label"] = np.where(breast_cancer_dataset.target == 0, 'benign', 'malignant')
+df["label"] = breast_cancer_dataset.target
 
 # Show the dataset info
 # st.sidebar.subheader("Dataset info")
@@ -33,6 +33,9 @@ st.sidebar.write(df["label"].value_counts())
 # Get the features and target
 X = df.drop(columns="label", axis=1)
 Y = df["label"]
+df['label'].replace({0:'benign',1:'malignant'},inplace=True)
+df['label'].replace({'benign':0,'malignant':1},inplace=True)
+
 
 # Split the dataset into training and testing sets
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=2)
@@ -50,20 +53,20 @@ testing_accuracy = accuracy_score(Y_test, model.predict(X_test))
 # Input data to predict
 # Input data to predict
 # Input data to predict
+# Input data to predict
 input_data = st.multiselect("Select the features", df.columns[:-1], key="input")
-
 input_data = [st.number_input(f"Enter {i}", min_value=df[i].min(), max_value=df[i].max(), value=df[i].mean(), step=0.01) for i in input_data]
-if st.button("Predict"):
+if st.button("Click here to predict"):
     if len(input_data) < 30:
         st.error("You must select at least 30 features to make a prediction, so far you have selected less.")
 
     else:
         input_data = np.array(input_data).reshape(1,-1)
         prediction = model.predict(input_data)
-        if prediction[0] == 1:
-            st.write("The patient is malignant.")
+        if prediction[0] == 0:
+            st.write("The breast cancer is Benign.")
         else:
-            st.write("The patient is benign.")
+            st.write("The bre is Malignant.")
 
 
 st.header("Model Evaluation")
